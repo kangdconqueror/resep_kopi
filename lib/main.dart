@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'pages/detail_page.dart';
-import 'pages/review_page.dart';
-import 'pages/all_reviews_page.dart';
+import 'pages/halaman_detail.dart';
+import 'pages/halaman_catatan.dart';
+import 'pages/halaman_semua_catatan.dart';
 
 void main() {
   runApp(CoffeeRecipeApp());
@@ -40,17 +40,22 @@ class _HomePageState extends State<HomePage> {
         title: Text('Resep Kopi'),
         actions: [
           IconButton(
-            icon: Icon(Icons.rate_review),
+            icon: Icon(Icons.note_add ),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AllReviewsPage()),
+                MaterialPageRoute(
+                  builder: (context) => CatatanPage(
+                    coffeeName: 'General Coffee Catatan',
+                  ),
+                ),
               );
             },
           ),
         ],
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -89,12 +94,12 @@ class _HomePageState extends State<HomePage> {
                         backgroundColor: Colors.black54,
                         title: Text(coffeeList[index]['name']!),
                         trailing: IconButton(
-                          icon: Icon(Icons.rate_review, color: Colors.white),
+                          icon: Icon(Icons.note_add, color: Colors.white),
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ReviewPage(
+                                builder: (context) => CatatanPage(
                                   coffeeName: coffeeList[index]['name']!,
                                 ),
                               ),
@@ -106,6 +111,29 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AllCatatansPage(),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.brown,
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: 15.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              child: Text('Lihat Semua Catatan'),
             ),
           ),
         ],

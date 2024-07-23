@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import '../models/catatan.dart';
 
 class DetailPage extends StatelessWidget {
   final String name;
@@ -70,9 +73,44 @@ class DetailPage extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Text(stories[name]!),
+            SizedBox(height: 20),
+            Text(
+              'Catatan:',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            FutureBuilder<List<Catatan>>(
+              future: _loadCatatansForCoffee(name),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                final catatans = snapshot.data!;
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: catatans.length,
+                  itemBuilder: (context, index) {
+                    final catatan = catatans[index];
+                    return ListTile(
+                      title: Text(catatan.catatan),
+                      subtitle: Text('${catatan.catataner} pada ${catatan.timestamp}'),
+                    );
+                  },
+                );
+              },
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<List<Catatan>> _loadCatatansForCoffee(String coffeeName) async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedCatatans = prefs.getStringList('catatans_all') ?? [];
+    return savedCatatans
+        .map((e) => Catatan.fromJson(jsonDecode(e)))
+        .where((catatan) => catatan.coffeeName == coffeeName)
+        .toList();
   }
 }
