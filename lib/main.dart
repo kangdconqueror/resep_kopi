@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'detail_page.dart';
+import 'pages/detail_page.dart';
+import 'pages/review_page.dart';
+import 'pages/all_reviews_page.dart';
 
 void main() {
   runApp(CoffeeRecipeApp());
@@ -18,7 +20,12 @@ class CoffeeRecipeApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final List<Map<String, String>> coffeeList = [
     {"name": "Americano", "image": "assets/images/americano.jpg"},
     {"name": "Cappuccino", "image": "assets/images/cappuccino.jpg"},
@@ -31,6 +38,17 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Resep Kopi'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.rate_review),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AllReviewsPage()),
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -70,6 +88,19 @@ class HomePage extends StatelessWidget {
                       footer: GridTileBar(
                         backgroundColor: Colors.black54,
                         title: Text(coffeeList[index]['name']!),
+                        trailing: IconButton(
+                          icon: Icon(Icons.rate_review, color: Colors.white),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ReviewPage(
+                                  coffeeName: coffeeList[index]['name']!,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
